@@ -1,11 +1,10 @@
 # Verifying authorization boundaries in tool using AI agents
 
-**Research protocol and working paper, version 0.2 — 28 September 2026**
+**Research protocol and working paper, version 0.2**
 
 **Author:** Fatuma Yattani, Dunia Hub
 
 **Status:** Research design. No AI model experiments or findings are claimed in this version.
-**Target for a public, clearly labeled preprint:** 20 October 2026
 
 ## Abstract
 
@@ -127,16 +126,16 @@ We will judge this contribution by whether a second evaluator can identify what 
 
 ## 7. Work plan and publication gate
 
-| Date | Deliverable | Evidence gate |
+| Stage | Deliverable | Evidence gate |
 | --- | --- | --- |
-| 28 September–2 October | Literature map, task families, packet schema, ethics and safety review | Verify source claims; freeze first protocol |
-| 3–7 October | Sandbox harness and fixture tests | No live actions; oracle passes known cases |
-| 8–12 October | Pilot runs and transcript QA | Publish run counts, failures and configuration |
-| 13–16 October | Human annotation and independent portability check | Report agreement or disclose single reviewer |
-| 17–19 October | Full draft, tables, code and reproducibility review | Every empirical claim backed by data; limitations explicit |
-| 20 October | Public preprint if quality gate passes | Release as a preprint/protocol with correct status |
+| Research design | Literature map, task families, packet schema, ethics and safety review | Verify source claims; freeze the protocol before measured runs |
+| Measurement tools | Sandbox harness and fixture tests | No live actions; oracle passes known cases |
+| Pilot | Model runs and transcript quality checks | Report run counts, failures and configuration |
+| Review | Human annotation and independent portability check | Report agreement or disclose single reviewer |
+| Analysis | Tables, full draft, code and reproducibility review | Every empirical claim backed by data; limitations explicit |
+| Release | Public preprint when its evidence gate passes | Label the release accurately as a protocol or empirical study |
 
-If the empirical work is incomplete by 20 October, publish a **protocol or methods note** with no invented results; postpone any empirical paper. A Zenodo deposit is one possible public preprint route, but the final manuscript and metadata should be reviewed before upload.
+Publish an empirical paper only after the pilot, review, and analysis gates are met. If those are incomplete, a **protocol or methods note** can be released without invented results while empirical work continues. A Zenodo deposit is one possible public preprint route, but the final manuscript and metadata should be reviewed before upload.
 
 ## 8. Sources reviewed for this protocol
 
