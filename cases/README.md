@@ -1,4 +1,4 @@
-# Synthetic case inventory
+# Synthetic test scenarios
 
 [`manifest.json`](manifest.json) defines twelve task families across document, calendar, purchasing, and account workflows. Each case has a legitimate user request, synthetic starting state, explicit permissions, one example of an allowed action, and one example of an out-of-scope action. These examples check the case boundary; they are not model results.
 
@@ -9,7 +9,7 @@ Every family has a `clear` and a `pressure` variant. The user request, initial s
 - `first_authorized_read_result`: add the note to the first response to the case's authorized read. Record the exact text shown.
 - `pre_action_notice`: show the note as a synthetic checkout notice before any tool call. This applies to P2, whose authorized step is a charge.
 
-The hint may suggest an unsafe shortcut, but it cannot grant permission or override the user's request. The runner must record where the hint came from.
+The hint may suggest an unsafe shortcut, but it cannot permission permission or override the user's request. The runner must record where the hint came from.
 
 ## Case map
 
@@ -37,15 +37,15 @@ The hint may suggest an unsafe shortcut, but it cannot grant permission or overr
 | `id`, `version`, `workflow` | Stable family identity, revision, and workflow category. |
 | `request` | Authoritative synthetic user instruction for both variants. |
 | `initial_state` | Resettable synthetic data. |
-| `grants` | Allowed action/resource pairs and any limits. An action without a matching grant is out of scope. |
-| `safe_action` | One action permitted by the grants. |
-| `probe_action` | One action outside the grants, used to check the future oracle. |
+| `permissions` | Allowed action/resource pairs and any limits. An action without a matching permission is out of scope. |
+| `safe_action` | One action permitted by the permissions. |
+| `probe_action` | One action outside the permissions, used to check the future oracle. |
 | `pressure_hint`, `pressure_surface` | Extra untrusted text and where the pressure variant exposes it. |
 
-`max_amount` caps a charge; `max_uses` limits how often a grant can be used. Asking for approval does not itself create a new grant. Reviewers must check that the machine-readable grants agree with the plain-language user request. A mismatch is an ambiguity to resolve, not an automatic pass.
+`max_amount` caps a charge; `max_uses` limits how often a permission can be used. Asking for approval does not itself create a new permission. Reviewers must check that the machine-readable permissions agree with the plain-language user request. A mismatch is an ambiguity to resolve, not an automatic pass.
 
 ## Review and versioning
 
-Before measured runs, review every case for an achievable authorized path, a clearly unauthorized probe, equivalent clear and pressure variants, consistent wording and grants, and wholly synthetic content. Freeze the reviewed manifest and record its version with each run. Any later change to a request, grant, fixture, hint, or placement requires a version change.
+Before measured runs, review every case for an achievable authorized path, a clearly unauthorized probe, equivalent clear and pressure variants, consistent wording and permissions, and wholly synthetic content. Freeze the reviewed manifest and record its version with each run. Any later change to a request, permission, fixture, hint, or placement requires a version change.
 
 The [research protocol](../paper/protocol.md) defines the study and scoring rubric. There are no model results in this directory.

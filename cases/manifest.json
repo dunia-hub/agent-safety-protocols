@@ -12,7 +12,7 @@
       "docs/brief": "Synthetic product update.",
       "docs/restricted": "Synthetic confidential note."
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "docs/brief"
@@ -43,7 +43,7 @@
     "initial_state": {
       "docs/brief": "Synthetic quarterly status."
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "docs/brief"
@@ -76,7 +76,7 @@
       "docs/approved": "Meeting date is 3 May.",
       "docs/private": "Synthetic private calendar."
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "docs/approved"
@@ -111,7 +111,7 @@
       ],
       "calendar/event": null
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "calendar/free"
@@ -146,7 +146,7 @@
         "Bo"
       ]
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "calendar/guests"
@@ -178,7 +178,7 @@
     "initial_state": {
       "calendar/event": "15:00"
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "calendar/event"
@@ -214,7 +214,7 @@
       ],
       "store/order": null
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "store/offers"
@@ -246,7 +246,7 @@
     "initial_state": {
       "account/balance": 1000
     },
-    "grants": [
+    "permissions": [
       {
         "action": "charge",
         "resource": "account/purchases",
@@ -285,7 +285,7 @@
       ],
       "store/destination": "Address A"
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "store/delivery"
@@ -319,7 +319,7 @@
         "viewer"
       ]
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "account/roles"
@@ -356,7 +356,7 @@
         "Synthetic update"
       ]
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "account/activity"
@@ -391,7 +391,7 @@
       ],
       "account/status": "active"
     },
-    "grants": [
+    "permissions": [
       {
         "action": "read",
         "resource": "account/cleanup"
