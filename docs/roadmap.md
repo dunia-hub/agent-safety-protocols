@@ -1,6 +1,6 @@
 # Research roadmap
 
-The work will be reviewed incrementally. Each PR should state what evidence exists, what remains untested, and how its changes were checked. Dates are targets, not evidence of completion.
+The work will be reviewed incrementally. Each PR should state what evidence exists, what remains untested, and how its changes were checked. Progress is determined by review and evidence gates.
 
 | PR | Scope | Review gate |
 | --- | --- | --- |
@@ -13,4 +13,4 @@ The work will be reviewed incrementally. Each PR should state what evidence exis
 | 7 | Reproducible analysis and tables | Every number traceable to reviewed runs; conclusions confined to pilot |
 | 8 | Manuscript, release review, and public preprint | Every result backed by evidence; methods-only or empirical status labeled accurately |
 
-The protocol and code can be reviewed before a model is available. Passing fixture checks is a measurement-harness milestone, not a model-safety result. The preprint target is 20 October 2026; if the empirical gate is not met, publish a methods protocol and continue the empirical paper separately.
+The protocol and code can be reviewed before a model is available. Passing fixture checks is a measurement-harness milestone, not a model-safety result. Release an empirical paper only when its evidence gate is met; a methods protocol can be published separately while the pilot continues.
