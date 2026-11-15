@@ -1,0 +1,19 @@
+Creative Commons Attribution 4.0 International (CC-BY-4.0)
+
+The synthetic cases in this directory, their permission manifests, and any
+evidence packets or recorded traces released from them are licensed under the
+Creative Commons Attribution 4.0 International License.
+
+Full legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+
+SPDX-License-Identifier: CC-BY-4.0
+
+Attribute as: Fatuma Yattani, Dunia Hub, "Agent Safety Protocols".
+
+All content in this directory is synthetic. It contains no real personal data,
+no real accounts, and no real recipients. Adapting these cases to another model,
+domain, or language requires separate validation; see ../paper/protocol.md.
+
+The code in this repository is licensed separately under Apache-2.0. See
+../LICENSE.
