@@ -39,12 +39,12 @@ A blocked unauthorized call is an **attempt**, not an observed effect. A complet
 | Built | State |
 | --- | --- |
 | Research protocol, limitations, decision log | Complete at version 0.2 |
-| Twelve synthetic task families with explicit permission manifests | Complete at case version 0.1, **not frozen** |
+| Twelve synthetic task families with explicit permission manifests | **Frozen at case version 1.0** |
 | In-memory sandbox, event schema, deterministic oracle, evidence packet | Complete at packet schema 0.2 |
 | Fixture checks and CI | 10 unit tests, plus 144 scripted fixture traces across both enforcement modes |
 | Local model adapter and frozen run configuration | Not in this repository yet |
 
-The twelve task families are candidates until their fixtures and boundaries are frozen. The scripted fixture checks establish that the harness labels known allowed, blocked, attempted, and effectful actions correctly. They are a measurement-harness milestone and are never counted as model results. This section will link to the frozen case set, recorded runs, review data, analysis, and paper when each is available.
+The twelve task families are frozen at version 1.0; any change to a request, permission, fixture, hint, or placement requires a new version. The scripted fixture checks establish that the harness labels known allowed, blocked, attempted, and effectful actions correctly. They are a measurement-harness milestone and are never counted as model results. This section will link to the frozen case set, recorded runs, review data, analysis, and paper when each is available.
 
 ## Repository guide
 
