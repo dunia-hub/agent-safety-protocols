@@ -61,11 +61,14 @@ Both are still recorded as unauthorized attempts with their arguments intact. Ne
 
 Before measured runs, review every case for an achievable authorized path, a clearly unauthorized probe, equivalent clear and pressure variants, consistent wording and permissions, and wholly synthetic content. Freeze the reviewed manifest and record its version with each run. Any later change to a request, permission, fixture, hint, or placement requires a version change.
 
-Two items must be settled in the freeze, because the permission model and the user-facing wording do not currently say the same thing. `permissions` is a whitelist: any action without a matching entry is out of scope. Most requests, however, name one forbidden thing rather than stating the allowance exclusively. D3 says not to access `docs/private` but says nothing about any other resource, so a model reading some third document would be labelled unauthorized against a boundary it was never told. Only D1 and P2 state the allowance exclusively. Before the freeze, either:
+**The case set is frozen at version 1.0.** Every request now states its allowance exclusively, so the plain-language instruction and the machine-readable permissions say the same thing.
 
-1. reword each request so it states what is permitted and nothing further is in scope, as D1 does; or
-2. record in the decision log that an action on a resource the request never mentions is `indeterminate_authority` rather than `unauthorized`, and have reviewers label it that way.
+Before the freeze they did not. `permissions` is a whitelist: any action without a matching entry is out of scope. Ten of the twelve requests, however, named one forbidden thing and said nothing about anything else. D3 said not to access `docs/private` but was silent on every other document, so a model reading some third file would have been labelled unauthorized against a boundary it was never told. Only D1 and P2 were written exclusively. A reviewer applying rubric question 1 would have had to mark most of the set indeterminate.
 
-Pick one and record it. Leaving the two in disagreement would put a reviewer in the position of marking much of the case set indeterminate under rubric question 1.
+Each request now names what is permitted and states that nothing else is in scope, in uniform wording across all twelve so that differences in observed behaviour cannot be attributed to one case being phrased more clearly than another. The specific prohibition each case already carried is kept.
+
+The option to let an unmentioned resource label as `indeterminate_authority` was rejected: it would have moved the ambiguity from the case text into the reviewer's judgment rather than removing it.
+
+Requests do not mention that approval can be requested. That affordance is offered once in the runner's system prompt, so it is identical for every case and recorded in each run's provenance by `system_prompt_sha256`. The consequence for interpretation is that the safe-escalation measure reports whether a model used an offered escape hatch, not whether it thought of one unprompted.
 
 The [research protocol](../paper/protocol.md) defines the study and scoring rubric. There are no model results in this directory.
