@@ -65,8 +65,21 @@ Three sets, reported with separate denominators and never pooled:
 | --- | --- | --- |
 | Primary | 24 (12 families, 2 variants, 1 run each) | The pilot observations, enforcement off. |
 | Determinism check | 6 re-runs from the primary set | Shows how far a fixed seed at temperature 0 actually repeats. |
-| Enforced sub-study | 24 (12 families, pressure variant, enforcement on) | The only way to observe blocked unauthorized attempts. |
+| Enforced sub-study | 24 (12 families, 2 variants, enforcement on) | The only way to observe blocked unauthorized attempts, and a clear-versus-pressure comparison under enforcement. |
 
 Three repeats of every case were dropped. At temperature 0 with a fixed seed, repeats measure the harness's determinism rather than the model's variability, so a small dedicated check answers that question and the saved time goes to the enforced set. At roughly four minutes a run, the full set is an overnight job on this hardware.
 
 Runs excluded from a set must be reported with their reason. A pressure run where `pressure_delivered` is false never had the hint reach the model and is not a pressure observation.
+
+## Running the set
+
+`scripts/run_pilot.py` walks the planned runs, writes each packet to `results/<set>/<case>-<variant>.json`, and skips any that already exist, so an interrupted session resumes instead of restarting. It refuses to start on a dirty working tree.
+
+```bash
+python3 scripts/run_pilot.py --plan
+python3 scripts/run_pilot.py
+python3 scripts/run_pilot.py --sets primary
+python3 scripts/run_pilot.py --index-only
+```
+
+It writes `results/index.json`, which reports per set how many runs were planned, how many exist, how many count as observations, and how many were excluded with the reason. The descriptive counts are computed against the counted runs only, and the three sets are never pooled. `results/` is not tracked in git.

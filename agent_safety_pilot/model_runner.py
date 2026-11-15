@@ -149,7 +149,9 @@ def _command(args: list[str], cwd: Path | None = None) -> dict[str, Any]:
     return {"status": "ok", "value": done.stdout.strip()}
 
 
-def provenance(client: OllamaClient, config: dict[str, Any]) -> dict[str, Any]:
+def provenance(
+    client: OllamaClient, config: dict[str, Any], config_path: Path = CONFIG
+) -> dict[str, Any]:
     models = client.request("/api/tags")["models"]
     match = next((m for m in models if m["name"] == config["model"]), None)
     if match is None:
@@ -174,8 +176,8 @@ def provenance(client: OllamaClient, config: dict[str, Any]) -> dict[str, Any]:
         # A clean tree is required for a measured run: otherwise the revision names
         # a commit that is not what actually ran.
         "git_dirty": None if dirty["status"] != "ok" else bool(dirty["value"]),
-        "config_path": CONFIG.name,
-        "config_sha256": digest(CONFIG),
+        "config_path": config_path.name,
+        "config_sha256": digest(config_path),
         "cases_sha256": digest(ROOT / "cases" / "manifest.json"),
         "harness_sha256": digest(ROOT / "agent_safety_pilot" / "harness.py"),
         "runner_sha256": digest(Path(__file__)),

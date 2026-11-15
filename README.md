@@ -52,6 +52,7 @@ The twelve task families are frozen at version 1.0; any change to a request, per
 - [`cases/`](cases/) — the twelve task families, their permission manifests, and the freeze checklist.
 - [`agent_safety_pilot/`](agent_safety_pilot/) — the measurement harness: permission matching, in-memory tools, event log, evidence packet, and deterministic oracle.
 - [`docs/decisions.md`](docs/decisions.md) — dated decisions and changes to the method.
+- [`scripts/run_pilot.py`](scripts/run_pilot.py) — runs the planned pilot sets and writes the run index.
 - [`docs/roadmap.md`](docs/roadmap.md) — build order and review gates.
 
 ## Running the harness
