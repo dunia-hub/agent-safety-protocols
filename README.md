@@ -34,18 +34,47 @@ A blocked unauthorized call is an **attempt**, not an observed effect. A complet
 
 ## Research status and evidence
 
-The protocol is a research design. **No model has been evaluated and no empirical safety result is claimed yet.** Its twelve task families are candidates until their fixtures and boundaries are frozen. Scripted checks of the sandbox will validate the measurement tools; they will not count as model results. This section will link to the case set, recorded runs, review data, analysis, and paper when each is available.
+**No model has been evaluated and no empirical safety result is claimed.** What exists is the research design and the measurement harness that will collect evidence once a model adapter is in place.
+
+| Built | State |
+| --- | --- |
+| Research protocol, limitations, decision log | Complete at version 0.2 |
+| Twelve synthetic task families with explicit permission manifests | Complete at case version 0.1, **not frozen** |
+| In-memory sandbox, event schema, deterministic oracle, evidence packet | Complete at packet schema 0.2 |
+| Fixture checks and CI | 10 unit tests, plus 144 scripted fixture traces across both enforcement modes |
+| Local model adapter and frozen run configuration | Not in this repository yet |
+
+The twelve task families are candidates until their fixtures and boundaries are frozen. The scripted fixture checks establish that the harness labels known allowed, blocked, attempted, and effectful actions correctly. They are a measurement-harness milestone and are never counted as model results. This section will link to the frozen case set, recorded runs, review data, analysis, and paper when each is available.
 
 ## Repository guide
 
 - [`paper/protocol.md`](paper/protocol.md) — research questions, method, rubric, limitations, and sources.
+- [`cases/`](cases/) — the twelve task families, their permission manifests, and the freeze checklist.
+- [`agent_safety_pilot/`](agent_safety_pilot/) — the measurement harness: permission matching, in-memory tools, event log, evidence packet, and deterministic oracle.
 - [`docs/decisions.md`](docs/decisions.md) — dated decisions and changes to the method.
 - [`docs/roadmap.md`](docs/roadmap.md) — build order and review gates.
 
-The protocol can be read now. Execution instructions and data formats will be documented alongside the runnable tools and released data; there is no model runner in this repository yet.
+## Running the harness
+
+Requires Python 3.10 or newer. The harness uses only the standard library and has no network, payment, or message adapter.
+
+```bash
+python3 -m unittest discover -s agent_safety_pilot/tests -v
+python3 -m agent_safety_pilot validate
+python3 -m agent_safety_pilot sample D1 unsafe pressure
+```
+
+`validate` runs every case family through each scripted actor under both enforcement settings and fails if any oracle label departs from the expected one. `sample` prints a single evidence packet. Both are documented in [`agent_safety_pilot/README.md`](agent_safety_pilot/README.md).
 
 ## Interpretation and reuse
 
 This work develops an **evaluation method**, not a safety certification for a model. A small synthetic study cannot establish a deployment-wide failure rate. Comparisons across models or translated cases require separately validated conditions. Public material will use synthetic data and distinguish proposed methods, fixture checks, model observations, and reviewer judgments.
 
-A license and data release terms have not yet been selected. They will be stated explicitly before code, cases, or traces are released for reuse.
+## License
+
+The code in this repository is licensed under [Apache-2.0](LICENSE). The synthetic cases in [`cases/`](cases/), their permission manifests, and any evidence packets released from them are licensed under [CC BY 4.0](cases/LICENSE).
+
+Attribute as: Fatuma Yattani, Dunia Hub, *Agent Safety Protocols*.
+
+Contributions are welcome. Please open an issue or a pull request that states what evidence exists, what remains untested, and how the change was checked, as [`docs/roadmap.md`](docs/roadmap.md) requires of every PR.
+
