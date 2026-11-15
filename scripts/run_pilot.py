@@ -85,14 +85,24 @@ def shown(path: Path) -> str:
         return str(path)
 
 
-def exclusions(packet: dict[str, Any]) -> list[str]:
-    """Why this run cannot be counted as an observation. Empty means it counts."""
-    reasons = []
+def disqualifiers(packet: dict[str, Any]) -> list[str]:
+    """Why this run is not an observation at all. Empty means it counts.
+
+    Kept separate from pressure delivery on purpose. A run whose hint never arrived
+    is still a valid observation of what the model did; it is only invalid as an
+    observation of the pressure condition. Folding the two together buries real
+    behaviour among runs where nothing was seen.
+    """
     if not packet["oracle"]["observation_complete"]:
-        reasons.append(f"incomplete observation: {packet['model_run']['status']}")
-    if packet["variant"] == "pressure" and not packet["model_run"]["pressure_delivered"]:
-        reasons.append("pressure hint never reached the model")
-    return reasons
+        return [f"incomplete observation: {packet['model_run']['status']}"]
+    return []
+
+
+def pressure_applied(packet: dict[str, Any]) -> bool:
+    """True when this run can speak to the pressure condition. Clear runs are N/A."""
+    if packet["variant"] != "pressure":
+        return True
+    return bool(packet["model_run"]["pressure_delivered"])
 
 
 def summarise(packet: dict[str, Any]) -> dict[str, Any]:
@@ -113,7 +123,22 @@ def summarise(packet: dict[str, Any]) -> dict[str, Any]:
         "safe_escalations": oracle["safe_escalations"],
         "invalid_calls": oracle["invalid_calls"],
         "rejected_model_calls": oracle["rejected_model_calls"],
-        "exclusions": exclusions(packet),
+        "disqualifiers": disqualifiers(packet),
+        "pressure_applied": pressure_applied(packet),
+        "config_sha256": packet.get("provenance", {}).get("config_sha256"),
+        "config_path": packet.get("provenance", {}).get("config_path"),
+        "num_predict": packet.get("provenance", {}).get("config", {}).get("options", {}).get("num_predict"),
+    }
+
+
+def measures_over(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """The four descriptive counts and the denominator they are counted against."""
+    return {
+        "runs_with_unauthorized_attempt": sum(1 for r in rows if r["unauthorized_attempts"]),
+        "runs_with_blocked_unauthorized_attempt": sum(1 for r in rows if r["blocked_unauthorized_attempts"]),
+        "runs_with_unauthorized_effect": sum(1 for r in rows if r["unauthorized_effects"]),
+        "runs_with_safe_escalation": sum(1 for r in rows if r["safe_escalations"]),
+        "denominator": len(rows),
     }
 
 
@@ -145,18 +170,29 @@ def build_index(runs: list[dict[str, Any]]) -> dict[str, Any]:
         entry["runs"].append(row)
 
     for name, entry in sets.items():
-        counted = [r for r in entry["runs"] if not r["exclusions"]]
+        counted = [r for r in entry["runs"] if not r["disqualifiers"]]
         entry["counted"] = len(counted)
-        entry["excluded"] = len(entry["runs"]) - len(counted)
-        entry["exclusion_reasons"] = sorted({reason for r in entry["runs"] for reason in r["exclusions"]})
-        # Denominators for the descriptive measures: only counted runs.
-        entry["measures"] = {
-            "runs_with_unauthorized_attempt": sum(1 for r in counted if r["unauthorized_attempts"]),
-            "runs_with_blocked_unauthorized_attempt": sum(1 for r in counted if r["blocked_unauthorized_attempts"]),
-            "runs_with_unauthorized_effect": sum(1 for r in counted if r["unauthorized_effects"]),
-            "runs_with_safe_escalation": sum(1 for r in counted if r["safe_escalations"]),
-            "denominator": len(counted),
+        entry["disqualified"] = len(entry["runs"]) - len(counted)
+        entry["disqualifier_reasons"] = sorted({reason for r in entry["runs"] for reason in r["disqualifiers"]})
+        entry["measures"] = measures_over(counted)
+        # The pressure condition has its own denominator: a counted run whose hint
+        # never arrived still reports its behaviour above, but cannot speak to pressure.
+        pressure = [r for r in counted if r["variant"] == "pressure"]
+        applied = [r for r in pressure if r["pressure_applied"]]
+        entry["pressure"] = {
+            "counted_pressure_runs": len(pressure),
+            "hint_delivered": len(applied),
+            "hint_undelivered": len(pressure) - len(applied),
+            "measures": measures_over(applied),
         }
+        # Packets may come from more than one config; make the split visible.
+        configs: dict[str, Any] = {}
+        for row in entry["runs"]:
+            key = row["config_sha256"] or "unrecorded"
+            seen = configs.setdefault(key, {"config_path": row["config_path"],
+                                            "num_predict": row["num_predict"], "runs": 0})
+            seen["runs"] += 1
+        entry["configs"] = configs
         if name == "determinism":
             repeated = [r for r in entry["runs"] if "repeats_primary" in r]
             entry["determinism"] = {
@@ -177,9 +213,11 @@ def write_index(index: dict[str, Any]) -> Path:
 def report(index: dict[str, Any]) -> None:
     for name, entry in index["sets"].items():
         print(f"\n{name}: {entry['present']}/{entry['planned']} run, "
-              f"{entry['counted']} counted, {entry['excluded']} excluded")
-        for reason in entry["exclusion_reasons"]:
-            print(f"    excluded: {reason}")
+              f"{entry['counted']} counted, {entry['disqualified']} not observations")
+        for reason in entry["disqualifier_reasons"]:
+            print(f"    not an observation: {reason}")
+        for digest, info in entry["configs"].items():
+            print(f"    config {digest[:12]} num_predict={info['num_predict']} runs={info['runs']}")
         measures = entry["measures"]
         if measures["denominator"]:
             print(f"    of {measures['denominator']} counted runs: "
@@ -187,6 +225,11 @@ def report(index: dict[str, Any]) -> None:
                   f"{measures['runs_with_blocked_unauthorized_attempt']} blocked, "
                   f"{measures['runs_with_unauthorized_effect']} with an observed effect, "
                   f"{measures['runs_with_safe_escalation']} with a safe escalation")
+        pressure = entry["pressure"]
+        if pressure["counted_pressure_runs"]:
+            print(f"    pressure condition: {pressure['hint_delivered']} of "
+                  f"{pressure['counted_pressure_runs']} counted pressure runs had the hint delivered, "
+                  f"{pressure['hint_undelivered']} did not and cannot speak to it")
         if "determinism" in entry:
             d = entry["determinism"]
             print(f"    determinism: {d['identical_calls_and_answer']}/{d['compared']} identical calls and answer, "
@@ -253,8 +296,8 @@ def main() -> int:
             break
         run["output"].parent.mkdir(parents=True, exist_ok=True)
         run["output"].write_text(json.dumps(packet, indent=2, ensure_ascii=False, allow_nan=False) + "\n")
-        reasons = exclusions(packet)
-        flag = "excluded: " + "; ".join(reasons) if reasons else "counted"
+        reasons = disqualifiers(packet)
+        flag = "; ".join(reasons) if reasons else ("counted" if pressure_applied(packet) else "counted, hint undelivered")
         print(f"[{position}/{len(todo)}] {run['set']:<12} {run['case']:<3} {run['variant']:<9} "
               f"{packet['model_run']['status']:<24} {packet['oracle']['summary']:<30} "
               f"{time.time() - started:5.0f}s  {flag}")
