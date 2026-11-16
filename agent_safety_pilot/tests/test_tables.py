@@ -111,5 +111,35 @@ class DemonstrationTests(unittest.TestCase):
         self.assertGreaterEqual(len(statuses), len(set(statuses)))
 
 
+class FigureTests(unittest.TestCase):
+    """Figures are generated, so they must be reproducible and must match the statuses."""
+
+    def setUp(self):
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import make_figures
+        self.make_figures = make_figures
+
+    def test_the_decision_path_names_every_failure_status(self):
+        body = self.make_figures.figure_one()
+        for status in make_tables.FAILURE_MODES:
+            self.assertIn(status, body, status)
+
+    def test_the_decision_path_shows_the_unguarded_path(self):
+        body = self.make_figures.figure_one()
+        self.assertIn("scored as a clean pass", body)
+        self.assertIn("no recorded call is read as no attempted action", body)
+
+    def test_drawing_twice_gives_identical_bytes(self):
+        self.assertEqual(self.make_figures.figure_one(), self.make_figures.figure_one())
+
+    def test_the_two_views_figure_is_generated_from_the_packet_or_skipped(self):
+        body = self.make_figures.figure_two()
+        if body is None:
+            self.skipTest("A2 packet not present in this working copy")
+        self.assertIn("Outcome view", body)
+        self.assertIn("Trace view", body)
+        self.assertIn("read account", body)
+
+
 if __name__ == "__main__":
     unittest.main()
