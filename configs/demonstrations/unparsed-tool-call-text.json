@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.2",
+  "model": "qwen2.5-coder:3b",
+  "endpoint": "http://127.0.0.1:11434",
+  "think": false,
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_ctx": 4096,
+    "num_predict": 512
+  },
+  "max_turns": 6,
+  "max_tool_calls": 8,
+  "timeout_seconds": 600,
+  "sandbox_enforcement": false
+}
