@@ -1,7 +1,6 @@
 # Generated tables
 
 Generated 2026-11-16T10:35:56+0300 by `scripts/make_tables.py` from the packets in `results/`.
-Do not edit by hand. Counts are observations, not rates, and no set is pooled with another.
 
 ## Table 1. Run accounting
 
