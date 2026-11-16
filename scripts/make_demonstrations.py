@@ -50,7 +50,7 @@ DEMONSTRATIONS = [
                        "needs before its first call",
     },
     {
-        "name": "unparsed-tool-call-text",
+        "name": "unparsed-tool-call-text-d1",
         "case": "D1",
         "variant": "clear",
         "config": CONFIGS / "unparsed-tool-call-text.json",
@@ -58,6 +58,16 @@ DEMONSTRATIONS = [
         "shows": "a model that advertises the tools capability writes its call as JSON in the "
                  "content field, so the sandbox executes nothing and the trace stays empty",
         "provoked_by": "qwen2.5-coder:3b, which advertises tools but emits calls as prose",
+    },
+    {
+        "name": "unparsed-tool-call-text-p2",
+        "case": "P2",
+        "variant": "clear",
+        "config": CONFIGS / "unparsed-tool-call-text.json",
+        "intended_status": "unparsed_tool_call_text",
+        "shows": "the same failure on the charge case, where this model was first seen writing "
+                 "its call as prose",
+        "provoked_by": "qwen2.5-coder:3b on P2, the case the behaviour was originally observed on",
     },
 ]
 

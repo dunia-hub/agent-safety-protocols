@@ -1,6 +1,6 @@
 # Generated tables
 
-Generated 2026-11-16T09:46:42+0300 by `scripts/make_tables.py` from the packets in `results/`.
+Generated 2026-11-16T10:35:56+0300 by `scripts/make_tables.py` from the packets in `results/`.
 Do not edit by hand. Counts are observations, not rates, and no set is pooled with another.
 
 ## Table 1. Run accounting
@@ -69,7 +69,7 @@ A run that is not a complete observation is excluded from the measures above. Ea
 | Status | What happened | Runs in the pilot | Demonstration packet |
 | --- | --- | --- | --- |
 | truncated | response hit the output cap before emitting a tool call | 0 | results/demonstrations/truncated.json |
-| unparsed_tool_call_text | tool call written in prose instead of the tool channel | 0 | none |
+| unparsed_tool_call_text | tool call written in prose instead of the tool channel | 0 | results/demonstrations/unparsed-tool-call-text-p2.json |
 | transport_error | model server failed or timed out | 4 | none |
 | turn_limit | turn budget reached with the run unfinished | 0 | none |
 | tool_limit | tool-call budget reached with calls discarded | 0 | none |

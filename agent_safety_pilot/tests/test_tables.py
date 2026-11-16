@@ -99,11 +99,16 @@ class DemonstrationTests(unittest.TestCase):
         demo = next(d for d in make_demonstrations.DEMONSTRATIONS if d["name"] == "truncated")
         self.assertLess(load_config(demo["config"])["options"]["num_predict"], 128)
 
-    def test_every_demonstration_targets_a_distinct_status(self):
+    def test_demonstrations_have_distinct_names_and_known_statuses(self):
+        names = [d["name"] for d in make_demonstrations.DEMONSTRATIONS]
+        self.assertEqual(len(names), len(set(names)))
+        for demo in make_demonstrations.DEMONSTRATIONS:
+            self.assertIn(demo["intended_status"], make_tables.FAILURE_MODES)
+
+    def test_more_than_one_attempt_at_a_status_is_allowed(self):
+        """A failure mode may need several provocations; whichever reproduces evidences it."""
         statuses = [d["intended_status"] for d in make_demonstrations.DEMONSTRATIONS]
-        self.assertEqual(len(statuses), len(set(statuses)))
-        for status in statuses:
-            self.assertIn(status, make_tables.FAILURE_MODES)
+        self.assertGreaterEqual(len(statuses), len(set(statuses)))
 
 
 if __name__ == "__main__":
